@@ -1,0 +1,9 @@
+#Creating a data pull from Cornell NLP group's Convokit, which includes a data corpus on CMV (r/changemyview) of "conversations gone awry" which are convos that violated subreddit rules as determined by mods
+#install required packages
+pip install convokit
+
+#downloads datset of interest
+from convokit import Corpus, download
+corpus = Corpus(filename=download("conversations-gone-awry-cmv-corpus"))
+
+corpus.print_summary_stats()
