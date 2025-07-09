@@ -17,7 +17,7 @@ cmv_corpus_path = os.path.join(corpus_cache_dir, "conversations-gone-awry-cmv-co
 # Download corpus only if not already downloaded
 if not os.path.exists(cmv_corpus_path):
     print("📥 Downloading CMV corpus to scratch cache...")
-    download("conversations-gone-awry-cmv-corpus", destination_dir=corpus_cache_dir)
+    download("conversations-gone-awry-cmv-corpus", data_dir=corpus_cache_dir)
 else:
     print("✅ CMV corpus found in cache. Skipping download.")
 
@@ -39,7 +39,7 @@ utterances = [utt.meta | {
 pd.DataFrame(utterances).to_csv(os.path.join(output_dir, "utterances.csv"), index=False)
 
 # Export users
-users = [{"user_id": user.id, **user.meta} for user in corpus.iter_users()]
+users = [{"user_id": speaker.id, **speaker.meta} for speaker in corpus.iter_speakers()]
 pd.DataFrame(users).to_csv(os.path.join(output_dir, "users.csv"), index=False)
 
 # Export conversations

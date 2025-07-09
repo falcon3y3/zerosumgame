@@ -1,4 +1,8 @@
 # download_cmv_csv_virtualenv.py
+#make sure to run this script inside a virtual environment and ensure you're in the proper directory using the commands:
+#python3 -m venv venv
+#source venv/bin/activate
+#pip install convokit pandas
 
 import os
 import subprocess
@@ -12,7 +16,7 @@ if sys.prefix == sys.base_prefix:
     sys.exit(1)
 
 # Step 2: Ensure output directory exists
-output_dir = "./my_outputs/cmv_csvs"
+output_dir = "./data/grte4343/thesis_groundtruth/zerosumgame"
 os.makedirs(output_dir, exist_ok=True)
 
 # Step 3: Download and load the CMV corpus
