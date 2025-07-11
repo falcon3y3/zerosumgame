@@ -49,4 +49,4 @@ pd.DataFrame(users).to_csv(os.path.join(output_dir, "users.csv"), index=False)
 
 # Export conversations
 convos = [{"conv_id": convo.id, **convo.meta} for convo in corpus.iter_conversations()]
-pd.DataFrame(convos).to_csv(os.path.join(output_
+pd.DataFrame(convos).to_csv(os.path.join(output_)
