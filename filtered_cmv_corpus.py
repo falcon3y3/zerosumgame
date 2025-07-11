@@ -1,3 +1,6 @@
+#filtering the CMV corpus for specific vocab keywords of interest
+#those that are likely indicative of a zero-sum game setup
+
 import pandas as pd
 import os
 
@@ -11,7 +14,7 @@ utterances_path = os.path.join(input_dir, "utterances.csv")
 utterances = pd.read_csv(utterances_path)
 
 # Define vocab features (keywords) to filter for:
-vocab_keywords = ["exampleword1", "exampleword2", "examplephrase"]
+vocab_keywords = ["can't", "impossible", "won't", "never"]
 
 # Filter utterances containing any of the vocab keywords (case-insensitive)
 pattern = "|".join(vocab_keywords)
