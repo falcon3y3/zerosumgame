@@ -1,6 +1,11 @@
 #in bash
 #chmod +x setup_env.sh
 #./setup_env.sh
+# download_cmv_csv_virtualenv.py
+#make sure to run this script inside a virtual environment and ensure you're in the proper directory using the commands:
+#python3 -m venv venv
+#source venv/bin/activate
+#pip install convokit pandas
 
 import os
 import pandas as pd
