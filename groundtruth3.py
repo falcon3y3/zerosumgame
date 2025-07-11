@@ -44,6 +44,4 @@ pd.DataFrame(users).to_csv(os.path.join(output_dir, "users.csv"), index=False)
 
 # Export conversations
 convos = [{"conv_id": convo.id, **convo.meta} for convo in corpus.iter_conversations()]
-pd.DataFrame(convos).to_csv(os.path.join(output_dir, "conversations.csv"), index=False)
-
-print(f"\n✅ All CSVs saved to: {os.path.abspath(output_dir)}")
+pd.DataFrame(convos).to_csv(os.path.join(output_
