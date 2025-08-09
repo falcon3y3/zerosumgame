@@ -2,6 +2,9 @@
 Creating a repository for my MSc thesis on dialogue extinction in the 21st century, with a specific focus on zero-sum game illusion in subreddits and LLM ability to act as a destructive discourse detector. 
 To begin with, I'm generating a ground-truth data set of examples of zero-sum language derived from the subreddit r/changemyview. In order to do this, I'm reviewing a dataset published from Convokit (Cornell NLP), known as the conversations-gone-awry-cmv-corpus. This dataset specifically includes CMV conversations pulled via Reddit's API (6,842 conversations containing 42,964 comments) that eventually derailed into antisocial behavior and moderator intervention, as well as exchanges that ended calmly (Chang and Danescu-Niculescu-Mizil, 2019). 
 
+# Annotation Guide
+Included in this Github is an annotation guide with basic instructions for human annotaters who examined the subset of selected zero-sum examples and non-examples. 
+
 # Dataset credit: 
 The conversations-gone-awry-cmv-corpus dataset can be downloaded via the Convokit tutorial available on the Cornell NLP github (https://github.com/CornellNLP/ConvoKit/tree/master), or via the following link: https://zissou.infosci.cornell.edu/convokit/datasets/
 
