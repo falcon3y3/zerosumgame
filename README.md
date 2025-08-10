@@ -1,5 +1,5 @@
 # The Zero-Sum Game Illusion Online
-This is a working repository for my MSc thesis on dialogue extinction in the 21st century, with a specific focus on zero-sum game illusion in subreddits and LLM ability to act as a destructive discourse detector. 
+This is a working repository for my MSc thesis on dialogue extinction in the 21st century, with a specific focus on zero-sum game illusions in subreddits and language learning models' potential ability to act as a destructive discourse detectors. 
 To begin with, I have generated a ground-truth data set of examples and non-examples of zero-sum language derived from the subreddit r/changemyview. In order to compile this, I reviewed a publicly available dataset published from Convokit (Cornell NLP), known as the conversations-gone-awry-cmv-corpus. This dataset specifically includes CMV conversations pulled via Reddit's API (6,842 conversations containing 42,964 comments) that eventually derailed into antisocial behavior and moderator intervention, as well as exchanges that ended calmly (Chang and Danescu-Niculescu-Mizil, 2019). 
 
 # Annotation Guide
