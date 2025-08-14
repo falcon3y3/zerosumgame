@@ -1,6 +1,4 @@
-#full_pipeline_binary_gt.py
-#Zero-shot or few-shot script, modifiable 
-# run_pipeline.py
+#few shot pipeline that includes balanced examples
 
 import os
 import pandas as pd
