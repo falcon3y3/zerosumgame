@@ -1,4 +1,4 @@
-# Full script: Annotator agreement with green visualization
+# Full script: Annotator agreement with green visualization, side-by-side matrices
 import pandas as pd
 import numpy as np
 from sklearn.metrics import cohen_kappa_score, confusion_matrix
@@ -62,7 +62,7 @@ def analyze_binary_annotations(df, col_a='label_a', col_b='label_b', n_boot=1000
     cm_counts = confusion_matrix(labels_a_str, labels_b_str, labels=['Y', 'N'])
     cm_counts_df = pd.DataFrame(cm_counts, index=['A:Y', 'A:N'], columns=['B:Y', 'B:N'])
     cm_percent = cm_counts / cm_counts.sum().sum() * 100
-    cm_percent_df = pd.DataFrame(cm_percent, index=['A:Y', 'A:N'], columns=['B:Y', 'B:N'])
+    cm_percent_df = pd.DataFrame(np.round(cm_percent, 1), index=['A:Y', 'A:N'], columns=['B:Y', 'B:N'])
 
     results = {
         'raw_percent_agreement': (raw_agreement, raw_ci),
@@ -74,65 +74,59 @@ def analyze_binary_annotations(df, col_a='label_a', col_b='label_b', n_boot=1000
     return results
 
 # -----------------------------
-# Save results as green JPEG image
+# Save results as green JPEG image, side-by-side matrices
 # -----------------------------
-def save_stats_with_percent_visual_green(stats, filename="annotator_stats_visual_green.jpeg"):
-    cm_metrics = [k for k in stats if "confusion_matrix" in k]
-    num_cm = len(cm_metrics)
-    fig_height = 2 + num_cm * 4
-    fig, axes = plt.subplots(nrows=num_cm + 1, ncols=1, figsize=(8, fig_height))
-    
-    if num_cm == 1:
-        axes = [axes]
+def save_stats_side_by_side_green(stats, filename="annotator_stats_side_by_side_green.jpeg"):
+    cm_counts = stats['confusion_matrix_counts']
+    cm_percent = stats['confusion_matrix_percent']
 
-    # Textual metrics
-    text_ax = axes[0]
-    text_ax.axis('off')
+    # Text metrics height
+    fig, ax_text = plt.subplots(figsize=(10, 2))
+    ax_text.axis('off')
     y = 1.0
     line_height = 0.08
     for metric, value in stats.items():
         if "confusion_matrix" not in metric:
             estimate, ci = value
-            text_ax.text(0, y, f"{metric.replace('_', ' ').title()}: {estimate:.3f} "
+            ax_text.text(0, y, f"{metric.replace('_', ' ').title()}: {estimate:.3f} "
                                 f"(95% CI: {ci[0]:.3f}, {ci[1]:.3f})",
                          fontsize=10, va='top')
             y -= line_height
+    plt.tight_layout()
+    plt.savefig("temp_text.png", dpi=300)
+    plt.close()
 
-    # Confusion matrices
-    for idx, metric in enumerate(cm_metrics):
-        cm_ax = axes[idx + 1]
-        df_cm = stats[metric]
-        cm_percent = df_cm / df_cm.values.sum().sum() * 100
-        cm_percent = cm_percent.round(1)  # Round percentages to 1 decimal
-
-        im = cm_ax.imshow(cm_percent.values, cmap=plt.cm.Greens)
-        cm_ax.set_xticks(range(len(df_cm.columns)))
-        cm_ax.set_xticklabels(df_cm.columns)
-        cm_ax.set_yticks(range(len(df_cm.index)))
-        cm_ax.set_yticklabels(df_cm.index)
-        cm_ax.set_title(metric.replace('_', ' ').title(), fontsize=10)
-
-        # Display counts in cells
+    # Confusion matrices side by side
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+    matrices = [(cm_counts, "Counts"), (cm_percent, "Percent")]
+    for ax, (df_cm, title) in zip(axes, matrices):
+        im = ax.imshow(df_cm.values, cmap=plt.cm.Greens)
+        ax.set_xticks(range(len(df_cm.columns)))
+        ax.set_xticklabels(df_cm.columns)
+        ax.set_yticks(range(len(df_cm.index)))
+        ax.set_yticklabels(df_cm.index)
+        ax.set_title(f"Confusion Matrix {title}", fontsize=10)
         for i in range(df_cm.shape[0]):
             for j in range(df_cm.shape[1]):
-                color = 'white' if cm_percent.iloc[i, j] > 50 else 'black'
-                cm_ax.text(j, i, f"{df_cm.iloc[i, j]}", ha='center', va='center', color=color, fontsize=10)
-
-        cm_ax.tick_params(axis='both', which='both', length=0)
+                value = df_cm.iloc[i, j]
+                if title == "Percent":
+                    text = f"{value:.1f}%"
+                else:
+                    text = f"{value}"
+                color = 'white' if (title=="Percent" and value > 50) or (title=="Counts" and value > df_cm.values.max()/2) else 'black'
+                ax.text(j, i, text, ha='center', va='center', color=color, fontsize=10)
+        ax.tick_params(axis='both', which='both', length=0)
 
     plt.tight_layout()
     plt.savefig(filename, dpi=300)
     plt.close()
-    print(f"Green stats image saved as {filename}")
+    print(f"Green stats image with side-by-side matrices saved as {filename}")
 
 # -----------------------------
 # Main
 # -----------------------------
 if __name__ == "__main__":
-    # Load Excel file (change path as needed)
-    df = pd.read_excel("zerosum_annotated_combined.xlsx")
-
-    # Column names for annotators
+    df = pd.read_excel("zerosum_annotated_combined.xlsx")  # adjust path
     stats = analyze_binary_annotations(df, col_a='annotator1', col_b='annotator2', n_boot=5000)
 
     # Print stats
@@ -145,6 +139,5 @@ if __name__ == "__main__":
             estimate, ci = value
             print(f"{metric}: {estimate:.3f} (95% CI: {ci[0]:.3f}, {ci[1]:.3f})")
 
-    # Save visualization
-    save_stats_with_percent_visual_green(stats)
+    save_stats_side_by_side_green(stats)
 

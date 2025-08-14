@@ -16,7 +16,7 @@ TEMPERATURE = 0
 DATA_PATH = "data/groundtruth_cleaned_anon.xlsx"
 RESULTS_PATH = "results/predictions.csv"
 SEED = 42
-K_FEW_SHOT = 10        # Number of few-shot examples
+K_FEW_SHOT = 8      # Number of few-shot examples
 MAX_PROMPT_TOKENS = None  # Cap prompt length if needed
 
 # ===== CREATE RESULTS FOLDER =====
@@ -77,14 +77,20 @@ def build_prompt(text, examples_df):
         examples_str += f'Comment: "{row["text"]}"\nOutput: {{"zero_sum": {int(row["zero_sum"])}, "justification": "{row["Annotation Justifications Combined"]}"}}\n\n'
 
     return f"""
-You are an expert linguistic researcher.
-You are tasked with reviewing Reddit comments to determine whether they contain
-the illusion of a zero-sum game.
+You are an expert linguistic researcher. 
+You are tasked with reviewing Reddit comments on controversial opinions 
+to determine whether the text contains a specific linguistic feature 
+called the illusion of a zero-sum game.
 
-Definition:
-A phenomenon in which people assign a strict gain/loss framework to a conflict,
-such that any gains accomplished by one side must be accompanied by an equivalent
-loss on the other. This is often seen in political or controversial discourse.
+The definition of the illusion of a zero-sum game is as follows: 
+a phenomenon in which people assign a strict gain/loss framework to a given conflict, 
+such that any gains accomplished by one side must necessarily be accompanied 
+by an equivalent loss on the part of the other. 
+
+This language often appears in discourse on political or controversial topics
+wherein people may identify strongly with one group over another.
+Please follow the instructions below and think carefully before
+generating an output.
 
 Instructions:
 - Respond ONLY with valid JSON.
