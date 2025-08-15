@@ -1,14 +1,15 @@
-#few-shot pipeline add --random when running if looking for multiple samples
+#zero-shot pipeline, add --random when running if looking for multiple samples
+#has timestamps
 import os
 import argparse
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from openai import OpenAI
-import math
 import json
 import matplotlib.pyplot as plt
 import seaborn as sns
+from datetime import datetime
 
 # ===== ARGUMENT PARSER =====
 parser = argparse.ArgumentParser()
@@ -19,13 +20,13 @@ args = parser.parse_args()
 MODEL_NAME = "gpt-4.1"
 TEMPERATURE = 0
 DATA_PATH = "data/groundtruth_cleaned_anon.xlsx"
-RESULTS_PATH = "results/predictions.csv"
 SEED = 42
-K_FEW_SHOT = 8
-MAX_PROMPT_TOKENS = None
 
 # ===== CREATE RESULTS FOLDER =====
 os.makedirs("results", exist_ok=True)
+
+# ===== TIMESTAMP =====
+run_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 # ===== API KEY SETUP =====
 api_key = os.environ.get("OPENAI_API_KEY")
@@ -48,58 +49,20 @@ else:
 
 print(f"Train size: {len(train)}, Validate size: {len(validate)}, Test size: {len(test)}")
 
-# ===== TOKEN APPROXIMATION =====
-def approx_tokens(s: str) -> int:
-    return max(1, math.ceil(len(s) / 4))
-
-# ===== FEW-SHOT SAMPLING =====
-def sample_few_shot(train_df, k=K_FEW_SHOT, max_tokens=None):
-    pos = train_df[train_df["zero_sum"] == 1]
-    neg = train_df[train_df["zero_sum"] == 0]
-
-    k_pos = min(len(pos), k // 2)
-    k_neg = min(len(neg), k - k_pos)
-
-    if args.random:
-        few_shot_df = pd.concat([
-            pos.sample(k_pos),
-            neg.sample(k_neg)
-        ]).sample(frac=1.0)
-    else:
-        few_shot_df = pd.concat([
-            pos.sample(k_pos, random_state=SEED),
-            neg.sample(k_neg, random_state=SEED)
-        ]).sample(frac=1.0, random_state=SEED)
-
-    if max_tokens:
-        chosen = []
-        used = 0
-        for _, r in few_shot_df.iterrows():
-            ex_str = f'Comment: "{r["text"]}"\nOutput: {{"zero_sum": {int(r["zero_sum"])}, "justification": "{r["annotation_justification_combo"]}"}}\n'
-            t = approx_tokens(ex_str)
-            if used + t > max_tokens:
-                break
-            chosen.append(r)
-            used += t
-        few_shot_df = pd.DataFrame(chosen)
-
-    return few_shot_df
-
-FEW_SHOT_SET = sample_few_shot(train, k=K_FEW_SHOT, max_tokens=MAX_PROMPT_TOKENS)
-
-# ===== Prompt Building =====
-def build_prompt(text, examples_df):
-    examples_str = ""
-    for _, row in examples_df.iterrows():
-        examples_str += f'Comment: "{row["text"]}"\nOutput: {{"zero_sum": {int(row["zero_sum"])}, "justification": "{row["annotation_justification_combo"]}"}}\n\n'
-
+# ===== PROMPT BUILDING =====
+def build_prompt_zero_shot(text):
     return f"""
-You are an expert linguistic researcher.
-You are tasked with reviewing Reddit comments to determine whether they contain the illusion of a zero-sum game.
+You are an expert linguistic researcher. 
+You are tasked with reviewing Reddit comments on controversial opinions to determine whether the text contains 
+a specific linguistic feature called the illusion of a zero-sum game. 
+The definition of the illusion of a zero-sum game is as follows: 
+a phenomenon in which people assign a strict gain/loss framework to a given conflict, 
+such that any gains accomplished by one side must necessarily be accompanied by an 
+equivalent loss on the part of the other. 
 
-Definition:
-A phenomenon in which people assign a strict gain/loss framework to a conflict,
-such that any gains accomplished by one side must be accompanied by an equivalent loss on the other.
+This language often appears in discourse on political or controversial topics 
+wherein people may identify strongly with one group over another. 
+Please follow the instructions below and think carefully before generating an output.
 
 Instructions:
 - Respond ONLY with valid JSON.
@@ -107,17 +70,15 @@ Instructions:
   - "zero_sum": integer 1 if zero-sum framing is present, otherwise integer 0
   - "justification": concise 1–2 sentence reason for the classification
 
-Here are some examples:
-{examples_str}
-Now classify the following:
+Now classify the following comment:
 
 Comment: "{text}"
 Output:
 """.strip()
 
 # ===== CLASSIFICATION =====
-def classify_with_justification(text):
-    prompt = build_prompt(text, FEW_SHOT_SET)
+def classify_zero_shot(text):
+    prompt = build_prompt_zero_shot(text)
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[{"role": "user", "content": prompt}],
@@ -128,7 +89,7 @@ def classify_with_justification(text):
 def run_classification(df_subset):
     results = []
     for _, row in df_subset.iterrows():
-        prediction_text = classify_with_justification(row["text"])
+        prediction_text = classify_zero_shot(row["text"])
         try:
             parsed = json.loads(prediction_text)
             pred_label = int(parsed.get("zero_sum", 0))
@@ -144,14 +105,16 @@ def run_classification(df_subset):
             "ground_justification": row["annotation_justification_combo"],
             "predicted_zero_sum": pred_label,
             "predicted_justification": pred_just,
-            "raw_llm_output": prediction_text
+            "raw_llm_output": prediction_text,
+            "timestamp": run_timestamp
         })
     return pd.DataFrame(results)
 
 # ===== EXECUTE ON TEST SET =====
 predictions_df = run_classification(test)
-predictions_df.to_csv(RESULTS_PATH, index=False)
-print(f"Predictions saved to {RESULTS_PATH}")
+predictions_csv_path = f"results/zero_shot_predictions_{run_timestamp}.csv"
+predictions_df.to_csv(predictions_csv_path, index=False)
+print(f"Predictions saved to {predictions_csv_path}")
 
 # ===== METRICS =====
 valid_preds = predictions_df.dropna(subset=["predicted_zero_sum"])
@@ -167,12 +130,14 @@ metrics_df = pd.DataFrame([{
     "Accuracy": acc,
     "Precision": prec,
     "Recall": rec,
-    "F1 Score": f1
+    "F1 Score": f1,
+    "timestamp": run_timestamp
 }])
-metrics_df.to_csv("results/fewshot_metrics.csv", index=False)
-
+metrics_csv_path = f"results/zero_shot_metrics_{run_timestamp}.csv"
+metrics_df.to_csv(metrics_csv_path, index=False)
 print("\n--- Evaluation Metrics ---")
 print(metrics_df)
+print(f"Metrics saved to {metrics_csv_path}")
 
 # ===== NORMALIZED CONFUSION MATRIX =====
 cm = confusion_matrix(y_true, y_pred, normalize='true')
@@ -182,6 +147,8 @@ sns.heatmap(cm, annot=True, fmt=".2f", cmap="Blues",
             yticklabels=["Not Zero-Sum", "Zero-Sum"])
 plt.xlabel("Predicted")
 plt.ylabel("True")
-plt.title("Normalized Confusion Matrix (Few-Shot)")
-plt.savefig("results/fewshot_confusion_matrix.png", dpi=300, bbox_inches='tight')
+plt.title(f"Normalized Confusion Matrix (Zero-Shot)")
+conf_matrix_path = f"results/zero_shot_confusion_matrix_{run_timestamp}.png"
+plt.savefig(conf_matrix_path, dpi=300, bbox_inches='tight')
 plt.close()
+print(f"Confusion matrix saved to {conf_matrix_path}")

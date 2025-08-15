@@ -1,0 +1,2 @@
+Accuracy,Precision,Recall,F1 Score,Chi-squared Statistic,P-value,Degrees of Freedom,ConfusionMatrix_TN,ConfusionMatrix_FP,ConfusionMatrix_FN,ConfusionMatrix_TP,ConfusionMatrix_TN_Percent,ConfusionMatrix_FP_Percent,ConfusionMatrix_FN_Percent,ConfusionMatrix_TP_Percent
+0.8387096774193549,0.9473684210526315,0.8181818181818182,0.8780487804878049,10.643889553429027,0.0011043516982089784,1,8,1,4,18,0.25806451612903225,0.03225806451612903,0.12903225806451613,0.5806451612903226
