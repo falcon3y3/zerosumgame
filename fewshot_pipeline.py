@@ -1,24 +1,32 @@
-#few shot pipeline that includes balanced examples
-
+# few shot pipeline
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from openai import OpenAI
 import math
 import json
+from scipy.stats import chi2_contingency
+from datetime import datetime
 
 # ===== CONFIG =====
 MODEL_NAME = "gpt-4.1"
 TEMPERATURE = 0
 DATA_PATH = "data/groundtruth_cleaned_anon.xlsx"
-RESULTS_PATH = "results/predictions.csv"
 SEED = 42
-K_FEW_SHOT = 8      # Number of few-shot examples
-MAX_PROMPT_TOKENS = None  # Cap prompt length if needed
+K_FEW_SHOT = 8
+MAX_PROMPT_TOKENS = None
 
 # ===== CREATE RESULTS FOLDER =====
 os.makedirs("results", exist_ok=True)
+
+# ===== TIMESTAMP =====
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+RESULTS_PATH = f"results/predictions_few_shot_{timestamp}.csv"
+METRICS_PATH = f"results/metrics_few_shot_{timestamp}.csv"
+CM_PATH = f"results/confusion_matrix_few_shot_{timestamp}.png"
 
 # ===== API KEY SETUP =====
 api_key = os.environ.get("OPENAI_API_KEY")
@@ -37,7 +45,7 @@ print(f"Train size: {len(train)}, Validate size: {len(validate)}, Test size: {le
 
 # ===== TOKEN APPROXIMATION =====
 def approx_tokens(s: str) -> int:
-    return max(1, math.ceil(len(s) / 4))  # crude heuristic
+    return max(1, math.ceil(len(s) / 4))
 
 # ===== FEW-SHOT SAMPLING =====
 def sample_few_shot(train_df, k=K_FEW_SHOT, seed=42, max_tokens=None):
@@ -68,27 +76,21 @@ def sample_few_shot(train_df, k=K_FEW_SHOT, seed=42, max_tokens=None):
 
 FEW_SHOT_SET = sample_few_shot(train, k=K_FEW_SHOT, seed=SEED, max_tokens=MAX_PROMPT_TOKENS)
 
-# ===== Prompting =====
+# ===== PROMPT BUILDER =====
 def build_prompt(text, examples_df):
     examples_str = ""
     for _, row in examples_df.iterrows():
         examples_str += f'Comment: "{row["text"]}"\nOutput: {{"zero_sum": {int(row["zero_sum"])}, "justification": "{row["annotation_justification_combo"]}"}}\n\n'
 
     return f"""
-You are an expert linguistic researcher. 
-You are tasked with reviewing Reddit comments on controversial opinions 
-to determine whether the text contains a specific linguistic feature 
-called the illusion of a zero-sum game.
+You are an expert linguistic researcher.
+You are tasked with reviewing Reddit comments on controversial opinions
+to determine whether the text contains the illusion of a zero-sum game.
 
-The definition of the illusion of a zero-sum game is as follows: 
-a phenomenon in which people assign a strict gain/loss framework to a given conflict, 
-such that any gains accomplished by one side must necessarily be accompanied 
-by an equivalent loss on the part of the other. 
-
-This language often appears in discourse on political or controversial topics
-wherein people may identify strongly with one group over another.
-Please follow the instructions below and think carefully before
-generating an output.
+Definition:
+A phenomenon in which people assign a strict gain/loss framework to a conflict,
+such that any gains accomplished by one side must be accompanied by an equivalent loss on the other.
+Often seen in political or controversial discourse.
 
 Instructions:
 - Respond ONLY with valid JSON.
@@ -104,7 +106,7 @@ Comment: "{text}"
 Output:
 """.strip()
 
-# ===== CLASSIFICATION FUNCTION =====
+# ===== CLASSIFY =====
 def classify_with_justification(text):
     prompt = build_prompt(text, FEW_SHOT_SET)
     response = client.chat.completions.create(
@@ -145,20 +147,61 @@ print(f"Predictions saved to {RESULTS_PATH}")
 
 # ===== METRICS =====
 valid_preds = predictions_df.dropna(subset=["predicted_zero_sum"])
-y_true = valid_preds["ground_truth"]
-y_pred = valid_preds["predicted_zero_sum"]
+y_true = valid_preds["ground_truth"].astype(int)
+y_pred = valid_preds["predicted_zero_sum"].astype(int)
 
 acc = accuracy_score(y_true, y_pred)
 prec = precision_score(y_true, y_pred, zero_division=0)
 rec = recall_score(y_true, y_pred, zero_division=0)
 f1 = f1_score(y_true, y_pred, zero_division=0)
+cm = confusion_matrix(y_true, y_pred)
+cm_normalized = cm.astype(float) / cm.sum()
 
+# ===== CHI-SQUARE =====
+contingency_table = pd.crosstab(y_true, y_pred)
+chi2, p, dof, expected = chi2_contingency(contingency_table)
+
+# ===== SAVE METRICS CSV =====
+metrics_df = pd.DataFrame([{
+    "Accuracy": acc,
+    "Precision": prec,
+    "Recall": rec,
+    "F1 Score": f1,
+    "Chi-squared Statistic": chi2,
+    "P-value": p,
+    "Degrees of Freedom": dof,
+    "ConfusionMatrix_TN": cm[0, 0],
+    "ConfusionMatrix_FP": cm[0, 1],
+    "ConfusionMatrix_FN": cm[1, 0],
+    "ConfusionMatrix_TP": cm[1, 1],
+    "ConfusionMatrix_TN_Percent": cm_normalized[0, 0],
+    "ConfusionMatrix_FP_Percent": cm_normalized[0, 1],
+    "ConfusionMatrix_FN_Percent": cm_normalized[1, 0],
+    "ConfusionMatrix_TP_Percent": cm_normalized[1, 1]
+}])
+metrics_df.to_csv(METRICS_PATH, index=False)
+print(f"Metrics saved to {METRICS_PATH}")
+
+# ===== SAVE CONFUSION MATRIX PLOT =====
+plt.figure(figsize=(5, 4))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+plt.title("Confusion Matrix - Few Shot")
+plt.savefig(CM_PATH, dpi=300, bbox_inches="tight")
+plt.close()
+print(f"Confusion matrix saved to {CM_PATH}")
+
+# ===== PRINT TO CONSOLE =====
 print("\n--- Evaluation Metrics ---")
 print(f"Accuracy:  {acc:.4f}")
 print(f"Precision: {prec:.4f}")
 print(f"Recall:    {rec:.4f}")
 print(f"F1 Score:  {f1:.4f}")
+print("Confusion Matrix:\n", cm)
 
-print("\nConfusion Matrix:")
-print(confusion_matrix(y_true, y_pred))
-
+print("\n=== Statistical Significance ===")
+print("Chi-squared statistic:", chi2)
+print("P-value:", p)
+print("Degrees of freedom:", dof)
+print("Expected frequencies:\n", expected)
