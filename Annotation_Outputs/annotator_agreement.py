@@ -105,7 +105,7 @@ def save_stats_side_by_side_green(stats, filename="annotator_stats_side_by_side_
         ax.set_xticklabels(df_cm.columns)
         ax.set_yticks(range(len(df_cm.index)))
         ax.set_yticklabels(df_cm.index)
-        ax.set_title(f"Confusion Matrix {title}", fontsize=10)
+        ax.set_title(f"Annotator Agreement {title}", fontsize=12)
         for i in range(df_cm.shape[0]):
             for j in range(df_cm.shape[1]):
                 value = df_cm.iloc[i, j]

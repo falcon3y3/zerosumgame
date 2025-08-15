@@ -56,7 +56,7 @@ def sample_few_shot(train_df, k=K_FEW_SHOT, seed=42, max_tokens=None):
         chosen = []
         used = 0
         for _, r in few_shot_df.iterrows():
-            ex_str = f'Comment: "{r["text"]}"\nOutput: {{"zero_sum": {int(r["zero_sum"])}, "justification": "{r["Annotation Justifications Combined"]}"}}\n'
+            ex_str = f'Comment: "{r["text"]}"\nOutput: {{"zero_sum": {int(r["zero_sum"])}, "justification": "{r["annotation_justification_combo"]}"}}\n'
             t = approx_tokens(ex_str)
             if used + t > max_tokens:
                 break
@@ -72,7 +72,7 @@ FEW_SHOT_SET = sample_few_shot(train, k=K_FEW_SHOT, seed=SEED, max_tokens=MAX_PR
 def build_prompt(text, examples_df):
     examples_str = ""
     for _, row in examples_df.iterrows():
-        examples_str += f'Comment: "{row["text"]}"\nOutput: {{"zero_sum": {int(row["zero_sum"])}, "justification": "{row["Annotation Justifications Combined"]}"}}\n\n'
+        examples_str += f'Comment: "{row["text"]}"\nOutput: {{"zero_sum": {int(row["zero_sum"])}, "justification": "{row["annotation_justification_combo"]}"}}\n\n'
 
     return f"""
 You are an expert linguistic researcher. 
@@ -131,7 +131,7 @@ def run_classification(df_subset):
             "ID": row["ID"],
             "text": row["text"],
             "ground_truth": int(row["zero_sum"]),
-            "ground_justification": row["Annotation Justifications Combined"],
+            "ground_justification": row["annotation_justification_combo"],
             "predicted_zero_sum": pred_label,
             "predicted_justification": pred_just,
             "raw_llm_output": prediction_text
