@@ -21,7 +21,7 @@ MODEL_NAME = "gpt-4.1"
 TEMPERATURE = 0
 DATA_PATH = "data/groundtruth_cleaned_anon.xlsx"
 SEED = 42
-K_FEW_SHOT = 8
+K_FEW_SHOT = 143
 MAX_PROMPT_TOKENS = None
 MODEL_TYPE = "few-shot"
 

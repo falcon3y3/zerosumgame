@@ -1,0 +1,2 @@
+Model_Type,Accuracy,Precision,Recall,F1 Score,timestamp
+few-shot,0.8333333333333334,1.0,0.7916666666666666,0.8837209302325582,2025-08-16_13-47-11
