@@ -1,0 +1,38 @@
+=== FEW only (k ∈ {8,20,143}): Logistic regression on correctness ===
+
+[Additive] correct ~ length_log + C(k)
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                correct   No. Observations:                  155
+Model:                          Logit   Df Residuals:                      153
+Method:                           MLE   Df Model:                            1
+Date:                Sat, 16 Aug 2025   Pseudo R-squ.:                 0.01968
+Time:                        20:47:08   Log-Likelihood:                -83.510
+converged:                       True   LL-Null:                       -85.186
+Covariance Type:            nonrobust   LLR p-value:                   0.06708
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      2.8912      0.990      2.920      0.004       0.950       4.832
+length_log    -0.3855      0.213     -1.812      0.070      -0.802       0.032
+==============================================================================
+
+[Interaction] correct ~ length_log * C(k)
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                correct   No. Observations:                  155
+Model:                          Logit   Df Residuals:                      153
+Method:                           MLE   Df Model:                            1
+Date:                Sat, 16 Aug 2025   Pseudo R-squ.:                 0.01968
+Time:                        20:47:08   Log-Likelihood:                -83.510
+converged:                       True   LL-Null:                       -85.186
+Covariance Type:            nonrobust   LLR p-value:                   0.06708
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      2.8912      0.990      2.920      0.004       0.950       4.832
+length_log    -0.3855      0.213     -1.812      0.070      -0.802       0.032
+==============================================================================
+
+[LRT: interaction] chi2=0.000, df=0, p=nan
+[LRT: length main effect] chi2=3.353, df=1, p=0.067075

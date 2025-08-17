@@ -1,0 +1,38 @@
+=== ZERO vs FEW: Logistic regression on correctness ===
+
+[Additive model] correct ~ length_log + C(condition)
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                correct   No. Observations:                  309
+Model:                          Logit   Df Residuals:                      307
+Method:                           MLE   Df Model:                            1
+Date:                Sat, 16 Aug 2025   Pseudo R-squ.:                0.003570
+Time:                        20:38:35   Log-Likelihood:                -190.79
+converged:                       True   LL-Null:                       -191.47
+Covariance Type:            nonrobust   LLR p-value:                    0.2423
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      1.4966      0.615      2.435      0.015       0.292       2.701
+length_log    -0.1600      0.137     -1.168      0.243      -0.429       0.108
+==============================================================================
+
+[Interaction model] correct ~ length_log * C(condition)
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                correct   No. Observations:                  309
+Model:                          Logit   Df Residuals:                      307
+Method:                           MLE   Df Model:                            1
+Date:                Sat, 16 Aug 2025   Pseudo R-squ.:                0.003570
+Time:                        20:38:35   Log-Likelihood:                -190.79
+converged:                       True   LL-Null:                       -191.47
+Covariance Type:            nonrobust   LLR p-value:                    0.2423
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      1.4966      0.615      2.435      0.015       0.292       2.701
+length_log    -0.1600      0.137     -1.168      0.243      -0.429       0.108
+==============================================================================
+
+[LRT: interaction] chi2=0.000, df=0, p=nan
+[LRT: length main effect] chi2=1.367, df=1, p=0.242336

@@ -1,0 +1,3 @@
+test,chi2,df,p_value
+ZERO vs FEW: interaction (length × condition),0.0,0,
+ZERO vs FEW: length main effect,1.366953495318171,1,0.2423360057471745

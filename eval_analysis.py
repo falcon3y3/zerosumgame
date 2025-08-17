@@ -1,11 +1,11 @@
 #analysis pipeline for text length versus LLM prediction accuracy using generated predictions 
 
 #python retro_length_analysis_multi.py \
-  --predictions_dir results \
-  --output_dir results/length_analysis \
-  --n_boot 5000 \
-  --ci 95 \
-  --length_unit words
+#--predictions_dir results \
+#--output_dir results/length_analysis \
+#--n_boot 5000 \
+#--ci 95 \
+#--length_unit words
 
 # Merge many prediction CSVs, analyze whether text length impacts accuracy,
 # and compute bootstrap CIs for accuracy by length bucket.

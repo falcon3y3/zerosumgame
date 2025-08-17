@@ -1,0 +1,11 @@
+run_id,file,timestamp,F1
+fewshot_metrics_2025-08-16_00-15-46,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_00-15-46.csv,2025-08-16_00-15-46,0.8571428571428571
+fewshot_metrics_2025-08-16_00-39-41,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_00-39-41.csv,2025-08-16_00-39-41,0.8888888888888888
+fewshot_metrics_2025-08-16_10-33-10,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_10-33-10.csv,2025-08-16_10-33-10,0.9230769230769232
+fewshot_metrics_2025-08-16_11-23-43,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_11-23-43.csv,2025-08-16_11-23-43,0.9696969696969696
+fewshot_metrics_2025-08-16_11-47-16,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_11-47-16.csv,2025-08-16_11-47-16,0.8372093023255814
+fewshot_metrics_2025-08-16_12-12-42,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_12-12-42.csv,2025-08-16_12-12-42,0.875
+fewshot_metrics_2025-08-16_12-41-09,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_12-41-09.csv,2025-08-16_12-41-09,0.9333333333333332
+fewshot_metrics_2025-08-16_13-00-23,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_13-00-23.csv,2025-08-16_13-00-23,0.8636363636363636
+fewshot_metrics_2025-08-16_13-26-23,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_13-26-23.csv,2025-08-16_13-26-23,0.9444444444444444
+fewshot_metrics_2025-08-16_13-47-11,results/Few_Shot_10runs_143ex/fewshot_metrics_2025-08-16_13-47-11.csv,2025-08-16_13-47-11,0.8837209302325582
