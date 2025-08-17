@@ -1,5 +1,6 @@
 # zero-shot pipeline, add --random when running if looking for multiple samples
 # has timestamps
+#uses claude-3-5-haiku-20241022
 import os
 import argparse
 import pandas as pd
@@ -17,7 +18,7 @@ parser.add_argument("--random", action="store_true", help="Use random splits eac
 args = parser.parse_args()
 
 # ===== CONFIG =====
-MODEL_NAME = "claude-3-opus-20240229"  # update if you want a faster/cheaper variant
+MODEL_NAME = "claude-3-5-haiku-20241022"  # update if you want a faster/cheaper variant
 TEMPERATURE = 0
 DATA_PATH = "data/groundtruth_cleaned_anon.xlsx"
 SEED = 42
@@ -116,7 +117,7 @@ def run_classification(df_subset):
 
 # ===== EXECUTE ON TEST SET =====
 predictions_df = run_classification(test)
-predictions_csv_path = f"results/zero_shot_predictions_{run_timestamp}.csv"
+predictions_csv_path = f"results/claude_zero_shot_predictions_{run_timestamp}.csv"
 predictions_df.to_csv(predictions_csv_path, index=False)
 print(f"Predictions saved to {predictions_csv_path}")
 
@@ -137,7 +138,7 @@ metrics_df = pd.DataFrame([{
     "F1 Score": f1,
     "timestamp": run_timestamp
 }])
-metrics_csv_path = f"results/zero_shot_metrics_{run_timestamp}.csv"
+metrics_csv_path = f"results/claude_zero_shot_metrics_{run_timestamp}.csv"
 metrics_df.to_csv(metrics_csv_path, index=False)
 print("\n--- Evaluation Metrics ---")
 print(metrics_df)
@@ -151,7 +152,7 @@ sns.heatmap(cm, annot=True, fmt=".2f", cmap="Blues",
             yticklabels=["Not Zero-Sum", "Zero-Sum"])
 plt.xlabel("Predicted")
 plt.ylabel("True")
-plt.title(f"Normalized Confusion Matrix (Zero-Shot)")
+plt.title(f"Normalized Confusion Matrix Zero-Shot: Claude")
 conf_matrix_path = f"results/zero_shot_confusion_matrix_{run_timestamp}.png"
 plt.savefig(conf_matrix_path, dpi=300, bbox_inches='tight')
 plt.close()

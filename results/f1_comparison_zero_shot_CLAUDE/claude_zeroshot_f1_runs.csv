@@ -1,0 +1,11 @@
+run_id,file,timestamp,F1
+claude_zero_shot_metrics_2025-08-17_15-12-29,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-12-29.csv,2025-08-17_15-12-29,0.8837209302325582
+claude_zero_shot_metrics_2025-08-17_15-15-06,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-15-06.csv,2025-08-17_15-15-06,0.8372093023255814
+claude_zero_shot_metrics_2025-08-17_15-16-34,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-16-34.csv,2025-08-17_15-16-34,0.8636363636363636
+claude_zero_shot_metrics_2025-08-17_15-17-51,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-17-51.csv,2025-08-17_15-17-51,0.8571428571428571
+claude_zero_shot_metrics_2025-08-17_15-19-22,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-19-22.csv,2025-08-17_15-19-22,0.875
+claude_zero_shot_metrics_2025-08-17_15-20-40,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-20-40.csv,2025-08-17_15-20-40,0.92
+claude_zero_shot_metrics_2025-08-17_15-22-20,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-22-20.csv,2025-08-17_15-22-20,0.88
+claude_zero_shot_metrics_2025-08-17_15-24-03,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-24-03.csv,2025-08-17_15-24-03,0.9361702127659576
+claude_zero_shot_metrics_2025-08-17_15-25-30,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-25-30.csv,2025-08-17_15-25-30,0.9230769230769232
+claude_zero_shot_metrics_2025-08-17_15-28-54,results/Metrics_Matrices_Zero10_CLAUDE/claude_zero_shot_metrics_2025-08-17_15-28-54.csv,2025-08-17_15-28-54,0.8695652173913043

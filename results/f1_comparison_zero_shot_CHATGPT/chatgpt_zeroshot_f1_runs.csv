@@ -1,0 +1,11 @@
+run_id,file,timestamp,F1
+zero_shot_metrics_2025-08-15_19-10-56,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-10-56.csv,2025-08-15_19-10-56,0.7727272727272727
+zero_shot_metrics_2025-08-15_19-13-23,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-13-23.csv,2025-08-15_19-13-23,0.6666666666666666
+zero_shot_metrics_2025-08-15_19-14-49,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-14-49.csv,2025-08-15_19-14-49,0.5142857142857142
+zero_shot_metrics_2025-08-15_19-16-08,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-16-08.csv,2025-08-15_19-16-08,0.75
+zero_shot_metrics_2025-08-15_19-17-30,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-17-30.csv,2025-08-15_19-17-30,0.7317073170731707
+zero_shot_metrics_2025-08-15_19-18-48,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-18-48.csv,2025-08-15_19-18-48,0.8780487804878049
+zero_shot_metrics_2025-08-15_19-19-58,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-19-58.csv,2025-08-15_19-19-58,0.6875
+zero_shot_metrics_2025-08-15_19-21-22,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-21-22.csv,2025-08-15_19-21-22,0.8571428571428571
+zero_shot_metrics_2025-08-15_19-22-48,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-22-48.csv,2025-08-15_19-22-48,0.8108108108108109
+zero_shot_metrics_2025-08-15_19-23-53,results/Metrics_Matrices_Zero10_CHATGPT/zero_shot_metrics_2025-08-15_19-23-53.csv,2025-08-15_19-23-53,0.7692307692307693
