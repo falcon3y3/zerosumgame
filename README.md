@@ -15,5 +15,5 @@ Chang, Jonathan P., and Cristian Danescu-Niculescu-Mizil. ‘Trouble on the Hori
 
 Jonathan P. Chang, Caleb Chiam, Liye Fu, Andrew Wang, Justine Zhang, Cristian Danescu-Niculescu-Mizil. 2020. "ConvoKit: A Toolkit for the Analysis of Conversations". Proceedings of SIGDIAL.
 
-# Generative AI Use: 
+# Generative AI Use Disclaimer: 
 Please note that ChatGPT was used to assist in the generation and revision of code for this project. 
